@@ -1,8 +1,9 @@
 # GradlePlugin
 
-### 简易plugin
+### Build Script
+在模块的build.gradle直接编写脚本代码，仅限于当前moudle,不利于复用
 
-1.在模块的build.gradle直接创建一个plugin
+* 在模块的build.gradle直接创建一个plugin
 ```
 /**
  * 只可在module的build.gradle定义的plugin
@@ -19,8 +20,16 @@ class helloWorldPlugin implements Plugin<Project> {
     }
 }
 ```
-2.然后在当前build.gradle apply
+* 当前module下build.gradle apply
 ```
 apply plugin: helloWorldPlugin
 ```
+### BuildSrc Project
+在项目建立一个gradle默认会编译的路径，整个项目的moudled都可通用
 
+* 创建'rootProjectDir/buildSrc/src/main/groovy'
+* 编写源码
+* apply
+```
+apply plugin: com.rolan.ProjectBuild//需要写包名+类名
+```
