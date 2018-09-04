@@ -1,4 +1,8 @@
 # GradlePlugin
+插件可分为三种方式编写，每种方式各有利弊，根据业务逻辑选择
+* Build Script
+* BuildSrc Project
+* Standalone project
 
 ### Build Script
 在模块的build.gradle直接编写脚本代码，仅限于当前moudle,不利于复用
@@ -33,3 +37,5 @@ apply plugin: helloWorldPlugin
 ```
 apply plugin: com.rolan.ProjectBuild//需要写包名+类名
 ```
+
+### Standalone project
