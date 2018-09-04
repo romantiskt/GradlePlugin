@@ -83,7 +83,11 @@ publishing {
 
 ```
 2.gradlew publish 发布
-  注意：记得发布或者升级版本之前不要配置了项目的 classpath,不然会发布错误
+ ```
+   注意：记得发布或者升级版本之前不要配置了项目的 classpath,不然会发布错误
+ ```
+  
+  
 3.依赖
 ```
 【project/build.gradle】
