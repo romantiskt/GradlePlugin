@@ -39,3 +39,60 @@ apply plugin: com.rolan.ProjectBuild//需要写包名+类名
 ```
 
 ### Standalone project
+* 创建一个Android Module
+```
+1.删除除src/main build.gradle文件外所有内容
+2.清空build.gradle
+3.创建 src/main/groovy/包名 目录
+```
+* 添加groovy语言支持
+```
+apply plugin: 'groovy'
+
+dependencies {
+    //gradle sdk
+    compile gradleApi()
+    //groovy sdk
+    compile localGroovy()
+}
+```
+* 编写插件代码
+* 发布
+1.build.gradle添加如下代码
+```
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'com.rolan.eventplugin'
+            artifactId 'eventplugin'
+            version '1.0.0'
+            from components.java
+        }
+    }
+}
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url uri('../maven')//发布到本地目录中
+        }
+    }
+}
+
+```
+2.gradlew publish 发布
+  注意：记得发布或者升级版本之前不要配置了项目的 classpath,不然会发布错误
+3.依赖
+```
+【project/build.gradle】
+
+ classpath 'com.rolan.eventplugin:eventplugin:1.0.0'
+ 
+ 
+【app/build.gradle】
+
+apply plugin: com.rolan.eventplugin.EventStonePlugin//需要写包名+类名
+
+```

@@ -8,6 +8,9 @@ apply plugin: helloWorldPlugin
 
 apply plugin: com.rolan.ProjectBuild//需要写包名+类名
 
+apply plugin: com.rolan.eventplugin.EventStonePlugin//需要写包名+类名
+
+
 android {
     compileSdkVersion 28
     defaultConfig {
