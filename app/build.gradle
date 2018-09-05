@@ -49,9 +49,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
-event{
-    description "fdfdfffffffffffffff______"
-}
 
 /**
  * 只可在module的build.gradle定义的plugin

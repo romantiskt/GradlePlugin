@@ -12,11 +12,12 @@ import org.gradle.api.Project
             group = "test"
             description = "hello world EventStonePlugin"
             doLast{
-                println '*****************Is me*********************'
+                println '*****************Is me 1122*********************'
                 println '**************************************'
             }
 
         }
+//        project.android.registerTransform(new EventTransform(project))
     }
 
     private void note(){
