@@ -28,6 +28,16 @@ android {
         }
     }
 }
+project_config{
+    name "GradlePlugin"
+    version "0.0.1"
+    module_config{
+        name "buildSrc module"
+    }
+
+}
+
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -37,6 +47,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+event{
+    description "fdfdfffffffffffffff______"
 }
 
 /**

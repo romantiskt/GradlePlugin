@@ -3,6 +3,7 @@
 * Build Script
 * BuildSrc Project
 * Standalone project
+* 动态获取配置
 
 ### Build Script
 在模块的build.gradle直接编写脚本代码，仅限于当前moudle,不利于复用
@@ -100,3 +101,56 @@ publishing {
 apply plugin: com.rolan.eventplugin.EventStonePlugin//需要写包名+类名
 
 ```
+
+### 动态获取配置
+  我们经常能看到第三方的项目会要求在build.gradle配置一些参数，这些参数有什么作用，怎么获取
+  
+ * 参数编写
+ ```
+ class ProjectExtension {//这里首字母一定要大写
+     String name = null
+     String version = null
+ }
+ 
+ class ModuleConfig {
+     String name = null
+ }
+ 
+ ```
+ 
+ * 参数获取与关联
+ ```
+  //关联
+  project.extensions.create('project_config', ProjectExtension)//这里会关联到build.gradle中配置的参数
+  project_config{}
+         project.extensions.create('module_config', ModuleConfig)
+         
+  //获取       
+  def project_config=project['project_config']
+  def module_config=project['module_config']
+  
+  println "project_config name:"+project_config.name
+  println "project_config version:"+project_config.version
+ 
+ ```
+ * 配置
+ ```
+ apply plugin: com.rolan.ProjectBuild//需要写包名+类名
+ ------------>这下面两种方式都可以
+ project_config{
+     name "GradlePlugin"
+     version "0.0.1"
+     module_config{
+         name "buildSrc module"
+     }
+ 
+ }
+ 
+ project_config{
+     name "GradlePlugin"
+     version "0.0.1"
+ }
+ module_config{
+          name "buildSrc module"
+      }
+ ```
