@@ -45,6 +45,7 @@ apply plugin: com.rolan.ProjectBuild//需要写包名+类名
 1.删除除src/main build.gradle文件外所有内容
 2.清空build.gradle
 3.创建 src/main/groovy/包名 目录
+4.创建 src/main/resources/META-INF/gradle-plugins/com.rolan.eventplugin.EventStone.properties //包名+
 ```
 * 添加groovy语言支持
 ```
