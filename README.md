@@ -4,6 +4,7 @@
 * BuildSrc Project
 * Standalone project
 * 动态获取配置
+* 修改字节码文件
 
 ### Build Script
 在模块的build.gradle直接编写脚本代码，仅限于当前moudle,不利于复用
@@ -154,4 +155,76 @@ apply plugin: com.rolan.eventplugin.EventStonePlugin//需要写包名+类名
  module_config{
           name "buildSrc module"
       }
+ ```
+ 
+ ### 修改字节码文件
+ * Transform的简要书写
+ 
+ 这里暂时没有对字节码文件做修改操作，而是将输入转给了输出，这是必须得基本步骤，因为Transform是一个串联的操作，
+ 必须有输入和输出，不然会中断编译
+ ```
+ class EventTransform extends Transform {
+ 
+     private Project project
+ 
+     EventTransform(Project project) {
+         this.project = project
+     }
+ 
+     @Override
+     String getName() {//tasks 名称
+         return "EventStonePlugin"
+     }
+ 
+     @Override
+     Set<QualifiedContent.ContentType> getInputTypes() {//处理的文件类型
+         return TransformManager.CONTENT_CLASS
+     }
+ 
+     @Override
+     Set<? super QualifiedContent.Scope> getScopes() {//指定task 作用范围
+         return TransformManager.SCOPE_FULL_PROJECT
+     }
+ 
+     @Override
+     boolean isIncremental() {
+         return false
+     }
+ 
+     @Override
+     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
+         super.transform(transformInvocation)
+         transformInvocation.inputs.each {
+             it.jarInputs.each {//对类型为jar文件的input进行遍历[第三方依赖]
+                 println "*******file_path jarInputs********" + it.file.absolutePath
+                 def jarName = it.name
+                 def md5Name = DigestUtils.md5Hex(it.file.getAbsolutePath())
+                 if (jarName.endsWith(".jar")) {
+                     jarName = jarName.substring(0, jarName.length() - 4)
+                 }
+                 // 获取output目录
+                 def dest = transformInvocation.outputProvider.getContentLocation(
+                         jarName + md5Name, it.contentTypes, it.scopes, Format.JAR)
+                 FileUtils.copyFile(it.file, dest)
+             }
+             it.directoryInputs.each {
+                 //对类型为“文件夹”的input进行遍历[包含书写的类以及R.class、BuildConfig.class以及R$XXX.class等]
+                 println "*******file_path directoryInputs********" + it.file.absolutePath
+                 // 获取output目录
+                 def dest = transformInvocation.outputProvider.getContentLocation(
+                         it.name,
+                         it.contentTypes,
+                         it.scopes,
+                         Format.DIRECTORY)
+                 FileUtils.copyDirectory(it.file, dest)
+             }
+         }
+     }
+ }
+ ```
+ * 在Plugin中注册
+ ```
+ void apply(Project project) {
+         project.android.registerTransform(new EventTransform(project))
+     }
  ```
