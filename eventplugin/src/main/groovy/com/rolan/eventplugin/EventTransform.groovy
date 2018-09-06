@@ -11,6 +11,7 @@ import com.android.build.api.transform.TransformInput
 import com.android.build.api.transform.TransformInvocation
 import com.android.build.api.transform.TransformOutputProvider
 import com.android.build.gradle.internal.pipeline.TransformManager
+import javassist.ClassPool
 import org.gradle.api.Project
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
@@ -18,7 +19,7 @@ import org.apache.commons.io.FileUtils
 class EventTransform extends Transform {
 
     private Project project
-
+    def pool=ClassPool.default
     EventTransform(Project project) {
         this.project = project
     }
@@ -46,6 +47,10 @@ class EventTransform extends Transform {
     @Override
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
         super.transform(transformInvocation)
+        project.android.bootClasspath.each {//这里会将android sdk插入进去，因为如果下面需要get android里的类
+            println "android absolutePath: " + it.absolutePath
+            pool.appendClassPath(it.absolutePath)
+        }
         transformInvocation.inputs.each {
             it.jarInputs.each {//对类型为jar文件的input进行遍历[第三方依赖]
                 println "*******file_path jarInputs********" + it.file.absolutePath
@@ -64,7 +69,7 @@ class EventTransform extends Transform {
 
                 InjectUtil.instance()
                         .setPackageName("com/rolan/gradleplugin")
-                        .injectCodeByDir(it.file.path,it.file.path)
+                        .injectCodeByDir(it.file.absolutePath,it.file.absolutePath)
                 println "*******file_path directoryInputs********" + it.file.absolutePath
                 // 获取output目录
                 def dest = transformInvocation.outputProvider.getContentLocation(

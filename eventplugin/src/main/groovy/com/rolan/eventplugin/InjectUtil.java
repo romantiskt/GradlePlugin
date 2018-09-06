@@ -2,6 +2,8 @@ package com.rolan.eventplugin;
 
 import com.rolan.eventplugin.util.FileUtil;
 
+import org.gradle.api.Project;
+
 import java.io.File;
 
 import javassist.ClassPool;
@@ -40,7 +42,7 @@ public class InjectUtil {
 
     void injectCodeByDir(String path, String rootPath){
         try {
-            pool.appendClassPath(path);
+            pool.insertClassPath(path);
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
@@ -71,8 +73,8 @@ public class InjectUtil {
                 String className = filePath.substring(index, filePath.length() - 6)
                         .replace('\\', '.').replace('/', '.');
                 println("***************----className----***************"+className);
-                addConstructorMethod(rootPath, className);
-//                injectMethod(rootPath,className);
+//                addConstructorMethod(rootPath, className);
+                injectMethod(rootPath,className);
             }
         }
 
@@ -80,7 +82,7 @@ public class InjectUtil {
 
     private void injectMethod(String rootPath,String className) {
         try {
-            CtClass ctClass = pool.getCtClass(className);
+            CtClass ctClass = pool.get(className);
             if (ctClass.isFrozen()) {
                 ctClass.defrost();
             }
@@ -89,13 +91,11 @@ public class InjectUtil {
                 println("----method----"+methodName);
                 if("onClick".equals(methodName)){
                     String body = "System.out.println(\"加入的方法\" ); ";
-//                    CtMethod method = ctClass.getDeclaredMethod("onClick",new CtClass[]{android.view.View.class});
-//                    method.insertAfter(body);
+                    CtMethod method = ctClass.getDeclaredMethod("onClick",new CtClass[]{pool.get("android.view.View")});
+                    method.insertAfter(body);
 
                 }
             }
-
-
             ctClass.writeFile(rootPath);
             ctClass.detach();
         } catch (Exception e) {
