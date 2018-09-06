@@ -3,7 +3,10 @@ package com.rolan.eventplugin;
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
- class EventStonePlugin implements Plugin<Project> {
+/**
+ * 插件里同时支持java grooovy混编
+ */
+class EventStonePlugin implements Plugin<Project> {
     void apply(Project project) {
 //        note()
 //        //create an extension object:Whyn,so others can config via Whyn
@@ -20,7 +23,7 @@ import org.gradle.api.Project
         project.android.registerTransform(new EventTransform(project))
     }
 
-    private void note(){
+    private void note() {
         println '------------------------'
         println 'apply EventStonePlugin'
         println '------------------------'

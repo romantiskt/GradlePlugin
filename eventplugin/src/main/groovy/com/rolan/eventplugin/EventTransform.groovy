@@ -61,6 +61,10 @@ class EventTransform extends Transform {
             }
             it.directoryInputs.each {
                 //对类型为“文件夹”的input进行遍历[包含书写的类以及R.class、BuildConfig.class以及R$XXX.class等]
+
+                InjectUtil.instance()
+                        .setPackageName("com/rolan/gradleplugin")
+                        .injectCodeByDir(it.file.path,it.file.path)
                 println "*******file_path directoryInputs********" + it.file.absolutePath
                 // 获取output目录
                 def dest = transformInvocation.outputProvider.getContentLocation(

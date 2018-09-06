@@ -6,6 +6,8 @@
 * 动态获取配置
 * 修改字节码文件
 
+在大多数情况下，我们都是用groovy来编写插件，因为groovy更简洁优雅，如果你不喜欢或是不太熟悉groovy，你也可以用java实现，插件编写支持groovy和java或者kotlin同时混编
+
 ### Build Script
 在模块的build.gradle直接编写脚本代码，仅限于当前moudle,不利于复用
 
