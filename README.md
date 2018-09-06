@@ -63,6 +63,7 @@ dependencies {
 ```
 * 编写插件代码
 * 发布
+
 1.build.gradle添加如下代码
 ```
 apply plugin: 'maven-publish'
@@ -231,6 +232,7 @@ apply plugin: com.rolan.eventplugin.EventStonePlugin//需要写包名+类名
      }
  ```
  * 操作class文件
+ 
  1.迭代文件夹目录，找出需要修改的class
  ```
   void injectCodeByDir(String path, String rootPath){
