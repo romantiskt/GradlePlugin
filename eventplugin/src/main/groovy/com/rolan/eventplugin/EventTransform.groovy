@@ -59,6 +59,8 @@ class EventTransform extends Transform {
                 if (jarName.endsWith(".jar")) {
                     jarName = jarName.substring(0, jarName.length() - 4)
                 }
+
+                JarInjectUtil.instance().inject(project,it.file)
                 // 获取output目录
                 def dest = transformInvocation.outputProvider.getContentLocation(
                         jarName + md5Name, it.contentTypes, it.scopes, Format.JAR)
