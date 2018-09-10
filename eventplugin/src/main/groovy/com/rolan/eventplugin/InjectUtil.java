@@ -66,15 +66,14 @@ public class InjectUtil {
                 && !filePath.contains("R$")
                 && !filePath.contains("R.class")
                 && !filePath.contains("BuildConfig.class")) {
-            println("****class file****"+filePath);
+            println("class file---->"+filePath);
             int index = FileUtil.isSamePackage(filePath, packageName);
             if(index!=-1){//未设置packageName默认不检查返回true
-                println("***************--------***************"+filePath);
                 String className = filePath.substring(index, filePath.length() - 6)
                         .replace('\\', '.').replace('/', '.');
-                println("***************----className----***************"+className);
 //                addConstructorMethod(rootPath, className);
                 injectMethod(rootPath,className);
+                println("dir className file---->"+className);
             }
         }
 
@@ -88,7 +87,7 @@ public class InjectUtil {
             }
             for (CtMethod ctmethod : ctClass.getDeclaredMethods()) {
                 String methodName = FileUtil.getSimpleName(ctmethod);
-                println("----method----"+methodName);
+                println("method---->"+methodName);
                 if("onClick".equals(methodName)){
                     String body = "System.out.println(\"加入的方法\" ); ";
                     CtMethod method = ctClass.getDeclaredMethod("onClick",new CtClass[]{pool.get("android.view.View")});

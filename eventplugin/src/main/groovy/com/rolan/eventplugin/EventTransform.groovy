@@ -48,23 +48,24 @@ class EventTransform extends Transform {
     void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
         super.transform(transformInvocation)
         project.android.bootClasspath.each {//这里会将android sdk插入进去，因为如果下面需要get android里的类
-            println "android absolutePath: " + it.absolutePath
             pool.appendClassPath(it.absolutePath)
         }
         transformInvocation.inputs.each {
             it.jarInputs.each {//对类型为jar文件的input进行遍历[第三方依赖]
-                println "*******file_path jarInputs********" + it.file.absolutePath
                 def jarName = it.name
                 def md5Name = DigestUtils.md5Hex(it.file.getAbsolutePath())
                 if (jarName.endsWith(".jar")) {
                     jarName = jarName.substring(0, jarName.length() - 4)
                 }
-
-                JarInjectUtil.instance().inject(project,it.file)
+                File injectedJarFile = JarInjectUtil.instance().inject(project,it.file)
                 // 获取output目录
                 def dest = transformInvocation.outputProvider.getContentLocation(
                         jarName + md5Name, it.contentTypes, it.scopes, Format.JAR)
-                FileUtils.copyFile(it.file, dest)
+                if(injectedJarFile!=null){
+                    FileUtils.copyFile(injectedJarFile, dest)
+                }else {
+                    FileUtils.copyFile(it.file, dest)
+                }
             }
             it.directoryInputs.each {
                 //对类型为“文件夹”的input进行遍历[包含书写的类以及R.class、BuildConfig.class以及R$XXX.class等]
@@ -72,7 +73,6 @@ class EventTransform extends Transform {
                 InjectUtil.instance()
                         .setPackageName("com/rolan/gradleplugin")
                         .injectCodeByDir(it.file.absolutePath,it.file.absolutePath)
-                println "*******file_path directoryInputs********" + it.file.absolutePath
                 // 获取output目录
                 def dest = transformInvocation.outputProvider.getContentLocation(
                         it.name,

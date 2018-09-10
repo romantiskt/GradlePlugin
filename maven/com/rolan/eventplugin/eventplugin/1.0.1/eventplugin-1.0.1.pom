@@ -18,5 +18,11 @@
       <version>3.20.0-GA</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.zeroturnaround</groupId>
+      <artifactId>zt-zip</artifactId>
+      <version>1.8</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 </project>
